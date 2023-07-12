@@ -3,10 +3,14 @@ import scipy.stats as stats
 
 # Read the data
 CA = pd.read_csv('./Data/CA_filtered.csv')
+BD = pd.read_csv('./Data/BD_filtered.csv')
 
 # separate by condition
 CA_A1 = CA[CA['Condition'] == 'S2A1']
 CA_A2 = CA[CA['Condition'] == 'S2A2']
+
+BD_A1 = BD[BD['Condition'] == 'S2A1']
+BD_A2 = BD[BD['Condition'] == 'S2A2']
 
 
 # test the correlations
@@ -30,6 +34,14 @@ A2_A_picks = correlation_test(CA_A2, 'Picking A')
 all_RT = correlation_test(CA, 'RT_mean')
 A1_RT = correlation_test(CA_A1, 'RT_mean')
 A2_RT = correlation_test(CA_A2, 'RT_mean')
+
+all_B_picks = correlation_test(BD, 'Picking B')
+A1_B_picks = correlation_test(BD_A1, 'Picking B')
+A2_B_picks = correlation_test(BD_A2, 'Picking B')
+
+all_RT_BD = correlation_test(BD, 'RT_mean')
+A1_RT_BD = correlation_test(BD_A1, 'RT_mean')
+A2_RT_BD = correlation_test(BD_A2, 'RT_mean')
 
 # # correlate RT with A picks (not significant)
 # r, p = stats.pearsonr(CA['RT_mean'], CA['Picking A'])
