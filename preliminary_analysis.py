@@ -37,7 +37,7 @@ def demographic_diff_detector(df, demographic_variable, variable_of_interest):
         for group_name, group_data in grouped_df:
             groups.append(group_data[variable_of_interest])
         f_d, p_d = stats.f_oneway(*groups)
-        print(f'[{demographic_variable}]: the t-value  for {variable_of_interest} is {f_d} and the p-value is {p_d}')
+        print(f'[{demographic_variable}]: the f-value  for {variable_of_interest} is {f_d} and the p-value is {p_d}')
 
 
 df_names = [CA, CA_A1, CA_A2]
