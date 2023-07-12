@@ -48,6 +48,11 @@ A2_RT_BD = correlation_test(BD_A2, 'RT_mean')
 # r_A1, p_A1 = stats.pearsonr(CA_A1['RT_mean'], CA_A1['Picking A'])
 # r_A2, p_A2 = stats.pearsonr(CA_A2['RT_mean'], CA_A2['Picking A'])
 
+# # correlate RT with B picks (not significant)
+# r_BD, p_BD = stats.pearsonr(BD['RT_mean'], BD['Picking B'])
+# r_A1_BD, p_A1_BD = stats.pearsonr(BD_A1['RT_mean'], BD_A1['Picking B'])
+# r_A2_BD, p_A2_BD = stats.pearsonr(BD_A2['RT_mean'], BD_A2['Picking B'])
+
 # # test correlations between personality scales (disinhibition scales are correlated)
 # for i in range(4, 20):
 #     for j in range(i + 1, 20):

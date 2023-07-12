@@ -37,7 +37,9 @@ print(f'The t-value is {t_A2} and the p-value is {p_A2}')
 
 t_A2_BD, p_A2_BD = stats.ttest_1samp(BD_A2['Picking B'], random_chance)
 print(f'The t-value is {t_A2_BD} and the p-value is {p_A2_BD}')
+mean_perc_BD_A1 = BD_A1['Picking B'].mean()
 mean_perc_BD_A2 = BD_A2['Picking B'].mean()
+print(f'The mean percentage of picking B in S2A1 is {mean_perc_BD_A1}')
 print(f'The mean percentage of picking B in S2A2 is {mean_perc_BD_A2}')
 
 
