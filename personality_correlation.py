@@ -27,6 +27,10 @@ all_A_picks = correlation_test(CA, 'Picking A')
 A1_A_picks = correlation_test(CA_A1, 'Picking A')
 A2_A_picks = correlation_test(CA_A2, 'Picking A')
 
+all_RT = correlation_test(CA, 'RT_mean')
+A1_RT = correlation_test(CA_A1, 'RT_mean')
+A2_RT = correlation_test(CA_A2, 'RT_mean')
+
 # # correlate RT with A picks (not significant)
 # r, p = stats.pearsonr(CA['RT_mean'], CA['Picking A'])
 # r_A1, p_A1 = stats.pearsonr(CA_A1['RT_mean'], CA_A1['Picking A'])
