@@ -25,25 +25,32 @@ t_A2, p_A2 = stats.ttest_1samp(CA_A2['Picking A'], random_chance)
 print(f'The t-value is {t_A2} and the p-value is {p_A2}')
 
 
-# gender differences
-def gender_diff_detector(df, variable_of_interest):
-    t_g, p_g = stats.ttest_ind(df.groupby('Sex')[variable_of_interest].get_group('Male'),
-                               df.groupby('Sex')[variable_of_interest].get_group('Female'))
-    print(f'The t-value  for {variable_of_interest} is {t_g} and the p-value is {p_g}')
+# demographic differences
+def demographic_diff_detector(df, demographic_variable, variable_of_interest):
+    if demographic_variable == 'Sex':
+        t_g, p_g = stats.ttest_ind(df.groupby('Sex')[variable_of_interest].get_group('Male'),
+                                   df.groupby('Sex')[variable_of_interest].get_group('Female'))
+        print(f'[{demographic_variable}]: the t-value  for {variable_of_interest} is {t_g} and the p-value is {p_g}')
+    else:
+        grouped_df = df.groupby(demographic_variable)
+        groups = []
+        for group_name, group_data in grouped_df:
+            groups.append(group_data[variable_of_interest])
+        f_d, p_d = stats.f_oneway(*groups)
+        print(f'[{demographic_variable}]: the t-value  for {variable_of_interest} is {f_d} and the p-value is {p_d}')
 
 
-# overall gd
-gender_diff_detector(CA, 'Picking A')
-gender_diff_detector(CA, 'RT_mean')
+df_names = [CA, CA_A1, CA_A2]
+demographic_variables = ['Sex', 'Race', 'Ethnicity']
+variables_of_interest = ['Picking A', 'RT_mean']
 
-# gd in A1
-gender_diff_detector(CA_A1, 'Picking A')
-gender_diff_detector(CA_A1, 'RT_mean')
+for df_name in df_names:
+    for demographic_variable in demographic_variables:
+        for variable_of_interest in variables_of_interest:
+            demographic_diff_detector(df_name, demographic_variable, variable_of_interest)
 
-A1_male = CA_A1.groupby('Sex')['Picking A'].get_group('Male').mean()
-A1_female = CA_A1.groupby('Sex')['Picking A'].get_group('Female').mean()
-print(f'The mean percentage of picking A for male is {A1_male}; for femail is {A1_female}')
 
-# gd in A2
-gender_diff_detector(CA_A2, 'Picking A')
-gender_diff_detector(CA_A2, 'RT_mean')
+# A1_male = CA_A1.groupby('Sex')['Picking A'].get_group('Male').mean()
+# A1_female = CA_A1.groupby('Sex')['Picking A'].get_group('Female').mean()
+# print(f'[Sex]: the mean percentage of picking A for male is {A1_male}; for femail is {A1_female}')
+
