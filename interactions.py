@@ -23,7 +23,7 @@ anova_table = sm.stats.anova_lm(model, typ=2)
 print(anova_table)
 
 # visualize the interaction
-interaction_plot = sns.lmplot(x='Bis11Score', y='Picking B', hue='Condition', data=CA,
+interaction_plot = sns.lmplot(x='Bis11Score', y='Picking A', hue='Condition', data=CA,
                               legend=False,scatter_kws={'s': 10})
 interaction_plot.set(xlabel='BIS-11 Score', ylabel='Percentage of Picking A')
 interaction_plot.ax.legend(title='Condition', loc='lower right')
