@@ -99,3 +99,5 @@ BD_filtered = pd.merge(BD_filtered, BD_percentage, on='Subnum').iloc[:, 0:23]
 # # save the filtered BD dataset
 # BD_filtered.to_csv('./Data/BD_filtered.csv', index=False)
 
+# print(min(data['Reward']))
+
