@@ -1,4 +1,7 @@
 import pandas as pd
+import scipy.stats as stats
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Read the data
 April = pd.read_csv('./data/PACStudy2Data_April_2023.csv')
@@ -34,6 +37,9 @@ April.loc[:, 'Subnum'] = April['Subnum'].apply(lambda x: x + 193)
 
 # now combine the three dataframes
 data = pd.concat([June, June_additional, April], ignore_index=True)
+
+# delete rows with the reaction time over 20000ms
+data = data[data['ReactTime'] < 20000]
 
 # # check the different values in the Subnum column
 # print(data['Subnum'].unique())
@@ -100,4 +106,48 @@ BD_filtered = pd.merge(BD_filtered, BD_percentage, on='Subnum').iloc[:, 0:23]
 # BD_filtered.to_csv('./Data/BD_filtered.csv', index=False)
 
 # print(min(data['Reward']))
+
+# test RT difference
+CA_unfiltered_A1 = CA[CA['Condition'] == 'S2A1']
+CA_unfiltered_A2 = CA[CA['Condition'] == 'S2A2']
+
+BD_unfiltered_A1 = BD[BD['Condition'] == 'S2A1']
+BD_unfiltered_A2 = BD[BD['Condition'] == 'S2A2']
+
+CA_unfiltered_A1_C = CA_unfiltered_A1[CA_unfiltered_A1['KeyResponse'] == 3]
+CA_unfiltered_A1_A = CA_unfiltered_A1[CA_unfiltered_A1['KeyResponse'] == 1]
+
+CA_unfiltered_A2_C = CA_unfiltered_A2[CA_unfiltered_A2['KeyResponse'] == 3]
+CA_unfiltered_A2_A = CA_unfiltered_A2[CA_unfiltered_A2['KeyResponse'] == 1]
+
+BD_unfiltered_A1_B = BD_unfiltered_A1[BD_unfiltered_A1['KeyResponse'] == 2]
+BD_unfiltered_A1_D = BD_unfiltered_A1[BD_unfiltered_A1['KeyResponse'] == 4]
+
+BD_unfiltered_A2_B = BD_unfiltered_A2[BD_unfiltered_A2['KeyResponse'] == 2]
+BD_unfiltered_A2_D = BD_unfiltered_A2[BD_unfiltered_A2['KeyResponse'] == 4]
+
+# t-test
+t, p = stats.ttest_ind(CA_unfiltered_A1_C['ReactTime'], CA_unfiltered_A1_A['ReactTime'])
+
+t_A2, p_A2 = stats.ttest_ind(CA_unfiltered_A2_C['ReactTime'], CA_unfiltered_A2_A['ReactTime'])
+
+t_BD, p_BD = stats.ttest_ind(BD_unfiltered_A1_B['ReactTime'], BD_unfiltered_A1_D['ReactTime'])
+
+t_A2_BD, p_A2_BD = stats.ttest_ind(BD_unfiltered_A2_B['ReactTime'], BD_unfiltered_A2_D['ReactTime'])
+print(BD_unfiltered_A1_B['ReactTime'].mean())  # D > B
+print(BD_unfiltered_A1_D['ReactTime'].mean())
+
+print(stats.ttest_ind(BD_unfiltered_A1['ReactTime'], BD_unfiltered_A2['ReactTime']))
+print(BD_unfiltered_A1['ReactTime'].mean())  # A1 > A2
+print(BD_unfiltered_A2['ReactTime'].mean())
+
+print(stats.ttest_ind(CA_unfiltered_A1['ReactTime'], CA_unfiltered_A2['ReactTime']))
+print(CA_unfiltered_A1['ReactTime'].mean())  # A1 > A2
+print(CA_unfiltered_A2['ReactTime'].mean())
+
+print(stats.ttest_ind(CA_unfiltered_A1['ReactTime'], BD_unfiltered_A1['ReactTime']))
+print(CA_unfiltered_A1['ReactTime'].mean())  # BD > CA
+print(BD_unfiltered_A1['ReactTime'].mean())
+
+print(stats.ttest_ind(CA_unfiltered_A2['ReactTime'], BD_unfiltered_A2['ReactTime']))  # not significant
 
