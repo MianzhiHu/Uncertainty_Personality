@@ -27,7 +27,6 @@ June_frequency_250 = June_frequency.groupby('Subnum').filter(lambda x: len(x) ==
 print(June_frequency_500['Reward'].std())
 print(June_frequency_250['Reward'].std())
 
-
 # cutting the June data from row 28000
 June_additional = June.iloc[28000:]
 
@@ -76,14 +75,12 @@ BD_percentage = BD.groupby('Subnum')['KeyResponse'].value_counts(normalize=True)
 BD_percentage = BD_percentage.rename(columns={2: 'Picking B', 4: 'Picking D'})
 BD_percentage = BD_percentage.fillna(0)
 
-
 # do the same for the reaction time
 CA_RT = CA.groupby('Subnum')['ReactTime'].mean().reset_index()
 CA_RT = CA_RT.rename(columns={'ReactTime': 'RT_mean'})
 
 BD_RT = BD.groupby('Subnum')['ReactTime'].mean().reset_index()
 BD_RT = BD_RT.rename(columns={'ReactTime': 'RT_mean'})
-
 
 # filter the data
 CA_filtered = CA.iloc[:, 0:21]
@@ -126,6 +123,20 @@ BD_unfiltered_A1_D = BD_unfiltered_A1[BD_unfiltered_A1['KeyResponse'] == 4]
 BD_unfiltered_A2_B = BD_unfiltered_A2[BD_unfiltered_A2['KeyResponse'] == 2]
 BD_unfiltered_A2_D = BD_unfiltered_A2[BD_unfiltered_A2['KeyResponse'] == 4]
 
+
+# # calculate the reward mean and std (fit with the experimental design)
+# def reward_mean_std(df):
+#     mean = df['Reward'].mean()
+#     std = df['Reward'].std()
+#     print(f'The mean is {mean} and the std is {std}')
+#
+#
+# df_list = [CA_unfiltered_A1_C, CA_unfiltered_A1_A, CA_unfiltered_A2_C, CA_unfiltered_A2_A,
+#            BD_unfiltered_A1_B, BD_unfiltered_A1_D, BD_unfiltered_A2_B, BD_unfiltered_A2_D]
+#
+# for df in df_list:
+#     reward_mean_std(df)
+
 # t-test
 t, p = stats.ttest_ind(CA_unfiltered_A1_C['ReactTime'], CA_unfiltered_A1_A['ReactTime'])  # insignificant
 
@@ -136,7 +147,6 @@ print(BD_unfiltered_A1_B['ReactTime'].mean())  # D > B
 print(BD_unfiltered_A1_D['ReactTime'].mean())
 
 t_A2_BD, p_A2_BD = stats.ttest_ind(BD_unfiltered_A2_B['ReactTime'], BD_unfiltered_A2_D['ReactTime'])  # insignificant
-
 
 print(stats.ttest_ind(BD_unfiltered_A1['ReactTime'], BD_unfiltered_A2['ReactTime']))
 print(BD_unfiltered_A1['ReactTime'].mean())  # A1 > A2
@@ -151,4 +161,3 @@ print(CA_unfiltered_A1['ReactTime'].mean())  # BD > CA
 print(BD_unfiltered_A1['ReactTime'].mean())
 
 print(stats.ttest_ind(CA_unfiltered_A2['ReactTime'], BD_unfiltered_A2['ReactTime']))  # not significant
-
