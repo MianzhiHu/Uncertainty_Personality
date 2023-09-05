@@ -42,6 +42,9 @@ mean_perc_BD_A2 = BD_A2['Picking B'].mean()
 print(f'The mean percentage of picking B in S2A1 is {mean_perc_BD_A1}')
 print(f'The mean percentage of picking B in S2A2 is {mean_perc_BD_A2}')
 
+t_BD_inter, p_BD_inter = stats.ttest_ind(BD_A1['Picking B'], BD_A2['Picking B'])
+print(f'The t-value is {t_BD_inter} and the p-value is {p_BD_inter}')
+
 
 # demographic differences
 def demographic_diff_detector(df, demographic_variable, variable_of_interest):

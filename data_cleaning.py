@@ -127,15 +127,16 @@ BD_unfiltered_A2_B = BD_unfiltered_A2[BD_unfiltered_A2['KeyResponse'] == 2]
 BD_unfiltered_A2_D = BD_unfiltered_A2[BD_unfiltered_A2['KeyResponse'] == 4]
 
 # t-test
-t, p = stats.ttest_ind(CA_unfiltered_A1_C['ReactTime'], CA_unfiltered_A1_A['ReactTime'])
+t, p = stats.ttest_ind(CA_unfiltered_A1_C['ReactTime'], CA_unfiltered_A1_A['ReactTime'])  # insignificant
 
-t_A2, p_A2 = stats.ttest_ind(CA_unfiltered_A2_C['ReactTime'], CA_unfiltered_A2_A['ReactTime'])
+t_A2, p_A2 = stats.ttest_ind(CA_unfiltered_A2_C['ReactTime'], CA_unfiltered_A2_A['ReactTime'])  # insignificant
 
 t_BD, p_BD = stats.ttest_ind(BD_unfiltered_A1_B['ReactTime'], BD_unfiltered_A1_D['ReactTime'])
-
-t_A2_BD, p_A2_BD = stats.ttest_ind(BD_unfiltered_A2_B['ReactTime'], BD_unfiltered_A2_D['ReactTime'])
 print(BD_unfiltered_A1_B['ReactTime'].mean())  # D > B
 print(BD_unfiltered_A1_D['ReactTime'].mean())
+
+t_A2_BD, p_A2_BD = stats.ttest_ind(BD_unfiltered_A2_B['ReactTime'], BD_unfiltered_A2_D['ReactTime'])  # insignificant
+
 
 print(stats.ttest_ind(BD_unfiltered_A1['ReactTime'], BD_unfiltered_A2['ReactTime']))
 print(BD_unfiltered_A1['ReactTime'].mean())  # A1 > A2

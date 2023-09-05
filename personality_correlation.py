@@ -165,10 +165,12 @@ plt.show(dpi=600)
 # r_A2_BD, p_A2_BD = stats.pearsonr(BD_A2['RT_mean'], BD_A2['Picking B'])
 
 # # test correlations between personality scales (disinhibition scales are correlated)
+# results = []
+#
 # for i in range(4, 20):
 #     for j in range(i + 1, 20):
 #         r, p = stats.pearsonr(CA[CA.columns[i]], CA[CA.columns[j]])
-#         # create a dataframe to store the results
-#         if p < 0.05:
-#             print(f'The correlation between {CA.columns[i]} and {CA.columns[j]} is significant.')
-#             print(f'The r-value is {r} and the p-value is {p}')
+#         results.append({'personality_scale_1': CA.columns[i], 'personality_scale_2': CA.columns[j], 'r': r, 'p': p})
+#
+# results_df = pd.DataFrame(results, columns=['personality_scale_1', 'personality_scale_2', 'r', 'p'])
+
