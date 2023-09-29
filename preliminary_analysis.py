@@ -5,6 +5,14 @@ import scipy.stats as stats
 CA = pd.read_csv('./Data/CA_filtered.csv')
 BD = pd.read_csv('./Data/BD_filtered.csv')
 
+# # get demographic information
+# # sex
+# print(CA['Sex'].value_counts())
+# # race
+# print(CA['Race'].value_counts())
+# # ethnicity
+# print(CA['Ethnicity'].value_counts())
+
 # preliminary analysis
 # test if A picks are significantly higher than random chance
 mean_perc = CA['Picking A'].mean()
