@@ -8,7 +8,6 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 from factor_analyzer import FactorAnalyzer
 from semopy import Model, semplot, report
 
-from data_cleaning import BD_unfiltered_A1
 
 # Read the data
 CA = pd.read_csv('./Data/CA_filtered.csv')
@@ -21,7 +20,7 @@ BD.loc[:, 'Condition'] = BD['Condition'].replace(condition_labels)
 
 # conduct the interaction analysis (BD showed the same pattern although not significant)
 DV = CA['Picking A']
-IV = CA['Bis11Score']
+IV = CA['Bis11Score']  # ESIBF_Disinhibition; TPM_Disinhibition; TPM_Meanness (Not significant)
 moderator = CA['Condition']
 
 model = ols('DV ~ IV * moderator', data=CA).fit()
@@ -31,10 +30,12 @@ print(anova_table)
 
 # visualize the interaction
 interaction_plot = sns.lmplot(x='Bis11Score', y='Picking A', hue='Condition', data=CA,
-                              legend=False,scatter_kws={'s': 10})
+                              legend=False, scatter_kws={'s': 10})
 interaction_plot.set(xlabel='BIS-11 Score', ylabel='Percentage of Picking A')
 interaction_plot.ax.legend(title='Condition', loc='lower right')
-# plt.setp(interaction_plot.ax.get_legend().get_texts(), fontsize=8)
+# make the dots less transparent
+interaction_plot.ax.collections[0].set_alpha(0.2)
+plt.setp(interaction_plot.ax.get_legend().get_texts(), fontsize=8)
 plt.show()
 
 # run another linear regression for RT
