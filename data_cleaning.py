@@ -17,10 +17,41 @@ April_frequency = April[April['Condition'] == 'S2A3']
 June_frequency = June[June['Condition'] == 'S2A3']
 # reindex the June_frequency dataframe to remove somehow duplicated rows
 June_frequency.loc[:, 'Subnum'] = (np.arange(len(June_frequency)) // 250) + 1
-print(April_frequency.groupby('KeyResponse')['Reward'].std())  # 0.43
-print(June_frequency.groupby('KeyResponse')['Reward'].std())  # 0.12
 print(April_frequency['Subnum'].nunique())
 print(June_frequency['Subnum'].nunique())
+
+
+# check the reward mean and std for each condition
+# [Frequency Only]: the std is 0.43 for April and 0.12 for June
+# NO FREQUENCY MANIPULATION
+# no other issues detected
+def experiment_checker(df, condition):
+    if condition == 'U-F':
+        df_selected = df[df['Condition'] == 'S2A1']
+    elif condition == 'U':
+        df_selected = df[df['Condition'] == 'S2A2']
+    elif condition == 'F':
+        df_selected = df[df['Condition'] == 'S2A3']
+
+    print(f'[Condition]: {condition}')
+    print(df_selected.groupby('KeyResponse')['Reward'].std())
+    print(df_selected.groupby('KeyResponse')['Reward'].mean())
+
+    df_selected = df_selected[df_selected['SetSeen.'] == 0]
+
+    # check how many trials are there for each participant
+    print(df_selected['Subnum'].value_counts())
+
+
+# df_list = [April, June]
+# condition_list = ['U-F', 'U', 'F']
+
+# for df in df_list:
+#     for condition in condition_list:
+#         experiment_checker(df, condition)
+
+# experiment_checker(April_frequency, 'F')
+
 
 # comment or uncomment the following lines to exclude the frequency-only condition with 0.43 std
 # April = April[April['Condition'] != 'S2A3']
@@ -129,14 +160,30 @@ AD_filtered = pd.merge(AD_filtered, AD_percentage, on='Subnum').iloc[:, 0:24]
 BD_filtered = pd.merge(BD_filtered, BD_RT, on='Subnum')
 BD_filtered = pd.merge(BD_filtered, BD_percentage, on='Subnum').iloc[:, 0:24]
 
+# test the between-condition differences for AD and DB
+AD_A1 = AD_filtered[AD_filtered['Condition'] == 'S2A1']
+AD_A2 = AD_filtered[AD_filtered['Condition'] == 'S2A2']
+
+BD_A1 = BD_filtered[BD_filtered['Condition'] == 'S2A1']
+BD_A2 = BD_filtered[BD_filtered['Condition'] == 'S2A2']
+
+print(stats.ttest_ind(AD_A1['Picking A'], AD_A2['Picking A']))
+print(stats.ttest_ind(BD_A1['Picking D'], BD_A2['Picking D']))
+
 # create a grouped bar plot for the average percentage of picking the best option
 # create a list of the mean percentages
 optimal_U_F = []
 optimal_U = []
 optimal_F = []
+SE_U_F = []
+SE_U = []
+SE_F = []
 RT_U_F_mean = []
 RT_U_mean = []
 RT_F_mean = []
+SE_RT_U_F = []
+SE_RT_U = []
+SE_RT_F = []
 mean_list = [CA_filtered, CB_filtered, AD_filtered, BD_filtered]
 labels = ['CA', 'CB', 'AD', 'DB']
 
@@ -147,9 +194,15 @@ for df in mean_list:
     optimal_U_F.append(df_U_F.iloc[:, -2].mean())
     optimal_U.append(df_U.iloc[:, -2].mean())
     optimal_F.append(df_F.iloc[:, -2].mean())
+    SE_U_F.append(stats.sem(df_U_F.iloc[:, -2]))
+    SE_U.append(stats.sem(df_U.iloc[:, -2]))
+    SE_F.append(stats.sem(df_F.iloc[:, -2]))
     RT_U_F_mean.append(df_U_F.iloc[:, -3].mean())
     RT_U_mean.append(df_U.iloc[:, -3].mean())
     RT_F_mean.append(df_F.iloc[:, -3].mean())
+    SE_RT_U_F.append(stats.sem(df_U_F.iloc[:, -3]))
+    SE_RT_U.append(stats.sem(df_U.iloc[:, -3]))
+    SE_RT_F.append(stats.sem(df_F.iloc[:, -3]))
 
 # conduct one-sample t-test
 degrees_of_freedom = []
@@ -190,42 +243,55 @@ results_df = pd.DataFrame({'Condition': ['Uncertainty-Frequency', 'Uncertainty O
                             'df': degrees_of_freedom})
 
 # # create the clustered bar plot
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(12, 12))
 x = np.arange(len(labels))
-width = 0.25
-plt.bar(x - width, optimal_U_F, width, label='Uncertainty-Frequency')
-plt.bar(x, optimal_U, width, label='Uncertainty Only')
-plt.bar(x + width, optimal_F, width, label='Frequency Only')
+width = 0.35  # 0.25 with 3 bars
+
+# # for three bars
+# plt.bar(x - width, optimal_U_F, width, label='Uncertainty-Frequency', yerr=SE_U_F, capsize=5)
+# plt.bar(x, optimal_U, width, label='Uncertainty Only', yerr=SE_U, capsize=5)
+# plt.bar(x + width, optimal_F, width, label='Frequency Only', yerr=SE_F, capsize=5)
+
+# for two bars
+plt.bar(x - width / 2, optimal_U_F, width, label='Uncertainty-Frequency', yerr=SE_U_F, capsize=5)
+plt.bar(x + width / 2, optimal_U, width, label='Uncertainty Only', yerr=SE_U, capsize=5)
 plt.xticks(x, labels)
-plt.ylabel('Percentage of Picking the First Item Listed')
-plt.title('(a) Percentage of Picking the First Item Listed')
+plt.ylabel('Proportion Picking the First Item Listed')
+plt.title('(a) Proportion Picking the First Item Listed')
 # add a line for random chance
 plt.axhline(y=0.5, color='r', linestyle='--')
-plt.legend()
+plt.legend(loc='upper left')
 plt.savefig('./Figures/optimal_percentage.png', dpi=600)
 plt.show()
-#
-# # create the clustered bar plot
-# plt.clf()
-#
-plt.figure(figsize=(10, 10))
-plt.bar(x - width, RT_U_F_mean, width, label='Uncertainty-Frequency')
-plt.bar(x, RT_U_mean, width, label='Uncertainty Only')
-plt.bar(x + width, RT_F_mean, width, label='Frequency Only')
+
+# create the clustered bar plot
+plt.clf()
+
+plt.figure(figsize=(12, 12))
+
+# # for three bars
+# plt.bar(x - width, RT_U_F_mean, width, label='Uncertainty-Frequency')
+# plt.bar(x, RT_U_mean, width, label='Uncertainty Only')
+# plt.bar(x + width, RT_F_mean, width, label='Frequency Only')
+
+# for two bars
+plt.bar(x - width / 2, RT_U_F_mean, width, label='Uncertainty-Frequency', yerr=SE_RT_U_F, capsize=5)
+plt.bar(x + width / 2, RT_U_mean, width, label='Uncertainty Only', yerr=SE_RT_U, capsize=5)
 plt.xticks(x, labels)
-plt.ylim(1000, max(RT_U_F_mean + RT_U_mean + RT_F_mean) + 10)
+plt.ylim(1000, max(RT_U_F_mean + RT_U_mean + RT_F_mean) + 80)
 plt.ylabel('Reaction Time (ms)')
 plt.title('(b) Reaction Time')
-plt.legend()
+plt.legend(loc='upper left')
 plt.savefig('./Figures/RT.png', dpi=600)
 plt.show()
-#
-# side_by_side_plot_generator(img1=plt.imread('./Figures/optimal_percentage.png'),
-#                             img2=plt.imread('./Figures/RT.png'),
-#                             figure_length=5,
-#                             figure_width=10,
-#                             title='behavioral_results',
-#                             orientation='vertical',
+
+
+# side_by_side_plot_generator(img1=plt.imread('./Figures/interaction.png'),
+#                             img2=plt.imread('./Figures/path_plot.png'),
+#                             figure_length=10,
+#                             figure_width=5,
+#                             title='poster',
+#                             orientation='horizontal',
 #                             dpi=600)
 
 
