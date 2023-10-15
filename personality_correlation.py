@@ -4,11 +4,14 @@ import matplotlib.pyplot as plt
 from statsmodels.stats.multitest import multipletests
 
 # Read the data
-# CA = pd.read_csv('./Data/CA_filtered_12.csv')
-# BD = pd.read_csv('./Data/BD_filtered_12.csv')
+CA = pd.read_csv('./Data/CA_filtered_12.csv')
+BD = pd.read_csv('./Data/BD_filtered_12.csv')
 
-CA = pd.read_csv('./Data/CA_filtered_43.csv')
-BD = pd.read_csv('./Data/BD_filtered_43.csv')
+CA = CA[CA['Condition'] != 'S2A3']
+BD = BD[BD['Condition'] != 'S2A3']
+
+# CA = pd.read_csv('./Data/CA_filtered_43.csv')
+# BD = pd.read_csv('./Data/BD_filtered_43.csv')
 
 # # transform the mental health variables
 # # add a column to indicate the anxiety level

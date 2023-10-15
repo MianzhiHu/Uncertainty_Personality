@@ -4,6 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 from utility import side_by_side_plot_generator
+import statsmodels.api as sm
 
 # Read the data
 April = pd.read_csv('./data/PACStudy2Data_April_2023.csv')
@@ -168,6 +169,10 @@ BD_A1 = BD_filtered[BD_filtered['Condition'] == 'S2A1']
 BD_A2 = BD_filtered[BD_filtered['Condition'] == 'S2A2']
 
 print(stats.ttest_ind(AD_A1['Picking A'], AD_A2['Picking A']))
+t_test = sm.stats.ttest_ind(BD_A1['Picking D'], BD_A2['Picking D'], alternative='two-sided', usevar='unequal')
+t_stat, p_value, df = t_test  # t_test is a tuple containing the t-statistic, p-value, and degrees of freedom
+
+print(f"t-statistic: {t_stat}, p-value: {p_value}, degrees of freedom: {df}")
 print(stats.ttest_ind(BD_A1['Picking D'], BD_A2['Picking D']))
 
 # create a grouped bar plot for the average percentage of picking the best option
@@ -286,12 +291,14 @@ plt.savefig('./Figures/RT.png', dpi=600)
 plt.show()
 
 
-# side_by_side_plot_generator(img1=plt.imread('./Figures/interaction.png'),
-#                             img2=plt.imread('./Figures/path_plot.png'),
-#                             figure_length=10,
-#                             figure_width=5,
-#                             title='poster',
-#                             orientation='horizontal',
+# side_by_side_plot_generator(img1=plt.imread('./Figures/path_plot.png'),
+#                             img2=plt.imread('./Figures/latent variable.png'),
+#                             figure_length=5,
+#                             figure_width=10,
+#                             title1='(a) SEM Model',
+#                             title2='(b) Reaction Time vs. Latent Variable',
+#                             title='SEM',
+#                             orientation='vertical',
 #                             dpi=600)
 
 
