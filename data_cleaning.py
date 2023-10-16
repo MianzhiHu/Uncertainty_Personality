@@ -64,6 +64,7 @@ data.loc[:, 'Subnum'] = (np.arange(len(data)) // 250) + 1
 
 # delete rows with the reaction time over 20000ms
 data = data[data['ReactTime'] < 20000]
+data = data[data['Condition'] != 'S2A3']
 
 # # check the different values in the Subnum column
 # print(data['Subnum'].unique())
@@ -160,6 +161,10 @@ AD_filtered = pd.merge(AD_filtered, AD_percentage, on='Subnum').iloc[:, 0:24]
 
 BD_filtered = pd.merge(BD_filtered, BD_RT, on='Subnum')
 BD_filtered = pd.merge(BD_filtered, BD_percentage, on='Subnum').iloc[:, 0:24]
+
+# # check the distribution of the percentage of picking the best option
+# sns.displot(data=CB_filtered, x='Picking C', hue='Condition', kind='kde', cut=0, clip=(0, 1))
+# plt.show()
 
 # test the between-condition differences for AD and DB
 AD_A1 = AD_filtered[AD_filtered['Condition'] == 'S2A1']
