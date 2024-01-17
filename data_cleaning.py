@@ -60,11 +60,13 @@ def experiment_checker(df, condition):
 
 # now combine the two dataframes
 data = pd.concat([June, April], ignore_index=True)
+
+# # delete rows with the reaction time over 20000ms
+# data = data[data['ReactTime'] < 20000]
+data = data[data['Condition'] != 'S2A3']
+
 data.loc[:, 'Subnum'] = (np.arange(len(data)) // 250) + 1
 
-# delete rows with the reaction time over 20000ms
-data = data[data['ReactTime'] < 20000]
-data = data[data['Condition'] != 'S2A3']
 
 # # check the different values in the Subnum column
 # print(data['Subnum'].unique())
@@ -72,8 +74,8 @@ data = data[data['Condition'] != 'S2A3']
 # for counts in data['Subnum'].value_counts():
 #     print(counts)
 
-# # save the complete dataset
-# data.to_csv('./Data/full_data.csv', index=False)
+# save the complete dataset
+data.to_csv('./Data/full_data.csv', index=False)
 
 # separate CA and BD trials
 CA = data[data['SetSeen.'] == 2]

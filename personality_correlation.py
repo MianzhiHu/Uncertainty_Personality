@@ -70,7 +70,7 @@ def correlation_test(df, variable_of_interest):
     # Convert the list to a DataFrame
     results_df = pd.DataFrame(results, columns=['personality_scale', 'r', 'p'])
     # # Calculate the Bonferroni-corrected p-values
-    # results_df.loc[:, 'p_corrected'] = results_df['p'] * 8
+    results_df.loc[:, 'p_corrected'] = results_df['p'] * 16
     return results_df
 
 
@@ -165,15 +165,15 @@ A3_RT_BD = correlation_test(BD_A3, 'RT_mean')
 # print(stats.f_oneway(CA_A2_no_depression['Picking A'], CA_A2_mild_depression['Picking A'],
 #                         CA_A2_moderate_depression['Picking A'], CA_A2_severe_depression['Picking A']))
 
-# correlate RT with A picks (not significant)
-r, p = stats.pearsonr(CA['RT_mean'], CA['Picking A'])
-r_A1, p_A1 = stats.pearsonr(CA_A1['RT_mean'], CA_A1['Picking A'])
-r_A2, p_A2 = stats.pearsonr(CA_A2['RT_mean'], CA_A2['Picking A'])
+# # correlate RT with A picks (not significant)
+# r, p = stats.pearsonr(CA['RT_mean'], CA['Picking A'])
+# r_A1, p_A1 = stats.pearsonr(CA_A1['RT_mean'], CA_A1['Picking A'])
+# r_A2, p_A2 = stats.pearsonr(CA_A2['RT_mean'], CA_A2['Picking A'])
 
-# correlate RT with B picks (not significant)
-r_BD, p_BD = stats.pearsonr(BD['RT_mean'], BD['Picking B'])
-r_A1_BD, p_A1_BD = stats.pearsonr(BD_A1['RT_mean'], BD_A1['Picking B'])
-r_A2_BD, p_A2_BD = stats.pearsonr(BD_A2['RT_mean'], BD_A2['Picking B'])
+# # correlate RT with B picks (not significant)
+# r_BD, p_BD = stats.pearsonr(BD['RT_mean'], BD['Picking B'])
+# r_A1_BD, p_A1_BD = stats.pearsonr(BD_A1['RT_mean'], BD_A1['Picking B'])
+# r_A2_BD, p_A2_BD = stats.pearsonr(BD_A2['RT_mean'], BD_A2['Picking B'])
 
 # # test correlations between personality scales (disinhibition scales are correlated)
 # results = []
